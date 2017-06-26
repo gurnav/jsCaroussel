@@ -8,22 +8,16 @@
 </head>
 
 <body>
-
-    <div class='slideshow'>
-        <div id='slide'>
-            <div id="slide_next"></div>
-            <img id='previous' class='chevron' src='img/gauche.png'>
-            <img id='playOrStop' class='chevron'  aria-hidden="true" src='img/play.png'>
-            <img id='next' class='chevron' src='img/droite.png'>
+    <div id='slideshow'>
+        <div id='slide'></div>
+        <div id ='nav'>
+            <div class= 'container'>
+                <img  id='previous' class='chevron' src='img/gauche.png'>
+                <img  id='playOrStop' class='chevron' action='play' src='img/play.png'>
+                <img  id='next' class='chevron' src='img/droite.png'>
+            </div>
         </div>
     </div>
-    <div class="description">
-        <div class="title"></div>
-        <div class="desc"></div>
-    </div>
-
-    <div class="navigator"></div>
-    
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src='js/scriptCarousel.js'></script>
@@ -31,5 +25,4 @@
     <noscript>JavaScript is Disabled. Please put it on.</noscript>
 
 </body>
-
 </html>

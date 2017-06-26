@@ -1,6 +1,35 @@
+/*
+Afficher un message si le JS n'est pas activé (done)
+Appel des données en AJAX (format JSON) https://www.skrzypczyk.fr/slideshow.php (done)
+
+Fonctionnalités :
+  Animation de l'affichage des titres et descriptions diff de l'animation des images
+  Rognage des images ou autre solution (done)
+  Suivant, précédent, play, pause (done)
+  Hover Play pause (done)
+  Responsive et BEAU (done)
+  Administrable via une liste de variable en haut de script
+  Module de controle : (Puces ou vignettes)
+*/
+
+
 $(document).ready(function () {
 
-  /*function slide () {
+  var slides = slide();
+  var refreshIntervalId;
+  var play = true;
+  var speed = 1000;
+  var sliding = false;
+
+  preloadSlide(slides);
+
+  // slideshow functions referred each to an id
+  $('#next').click(fonctionNext);
+  $('#previous').click(fonctionPrevious);
+  $('#playOrStop').click(fonctionPlayStop);
+
+  function slide () {
+    let data;
     $.ajax({
       type: 'POST',
       url: "https://www.skrzypczyk.fr/slideshow.php",
@@ -14,102 +43,91 @@ $(document).ready(function () {
       }
     });
     return data;
-  }*/
+  }
 
-  var canClick = true;
-  var refreshIntervalId;
-  var canPlay = true;
-  var watchHover = false;
-
-  $.getJSON("https://www.skrzypczyk.fr/slideshow.php", function (data) {
-    var nbImages = 0;
-    $.each(data, function(key, value) {
-      $("#slide_next").append("<img src=\""+ value["url"] +"\" data-nb=\""+ nbImages + "\" data-desc=\""+ value["desc"] +"\" data-title=\""+ value["title"] +"\">");
-      nbImages++;
+  //function to display and load all the pictures, title, description
+  function preloadSlide (slides) {
+    let slideSize = slides.length * $(this).width();
+    slides.forEach(function (element) {
+      console.log(element.url);
+      $('#slide').append("<div class='element'><img src='" + element.url + "' class='slideshow'><div class='divTitle'>" + element.title + "</div><div class='divDesc'>" + element.desc + "</div></div");
     });
-    
-    displayTitle();
+    $('#slide').css('width', slideSize);
+  }
 
-    $("#slide_next").css("width", nbImages*800);
-
-  });
-
+  //function to display the next picture of it's actual
   function fonctionNext () {
-    $('.description').css({
-        textShadow: "0 0 #fff"
-      });
-    if (canClick) {
-      removeTitle();
-      canClick = false;
-      $('#slide_next').animate(
-        { marginLeft: '-800px' },
-        1000, function () {
-          var first = $("img:first");
-          $('#slide_next img:last-child').after(first);
-          $('#slide_next').css('margin-left', '0px');
-          canClick = true;
-          displayTitle();
-        });
+    // Stop the function if we're already sliding
+    if(sliding){
+        return false;
     }
+    // And now we're sliding
+    sliding = true;
+    $('#slide').animate(
+      { marginLeft: '-700px' },
+      speed,
+      function () {
+        $('#slide .element:last').after($('#slide .element:first'));
+        $('#slide').css('margin-left', '0px');
+        // Slide over!
+        sliding = false;
+      }
+    );
   }
 
-  $("#next").click(fonctionNext);
-
+  //function to display the previous picture of it's actual
   function fonctionPrevious () {
-    $('.description').css({
-        textShadow: "0 0 #fff"
-      });
-    if (canClick) {
-      removeTitle();
-      canClick = false;
-      var last = $("img:last");
-      $('#slide_next img:first-child').before(last);
-      $('#slide_next').css('margin-left', '-800px');
-      $('#slide_next').animate({
-       marginLeft: '0px' },
-        1000, function() {
-        canClick = true;
-        displayTitle();
-      });
+    // Stop the function if we're already sliding
+    /*if(sliding){
+        return false;
     }
+    // And now we're sliding
+    sliding = true;
+    $('#slide .element:first').before($('#slide .element:last'));
+    $('#slide').css('margin-left', '-700px');
+    $('#slide').animate(
+      { marginLeft: '0px' },
+      speed
+    );
+    // Slide over!
+    sliding = false;*/
+    if(sliding){
+        return false;
+    }
+    // And now we're sliding
+    sliding = true;
+    $('#slide').animate(
+      { marginLeft: '0px' },
+      speed,
+      function () {
+        $('#slide .element:first').before($('#slide .element:last'));
+        $('#slide').css('margin-left', '-700px');
+        // Slide over!
+        sliding = false;
+      }
+    );
   }
 
-  $('#previous').click(fonctionPrevious);
-
-  $('#playOrStop').click(fonctionPlayStop);
-
+  //this function set a timer that played with the play/pause function of the slider 
+  //if the user click on the play button or press on spacebar it'll stop the slider
   function fonctionPlayStop () {
-    //let action = $('#playOrStop').attr('action');
+    let action = $('#playOrStop').attr('action');
 
-    if (action == true) {
-      refreshIntervalId = setInterval(fonctionNext,2000);
-      canPlay = false;
+    if (action === 'play') {
+      refreshIntervalId = setInterval(fonctionNext,speed);
+      playStop = false;
       $('#playOrStop').attr('action', 'stop');
       $('#playOrStop').attr('src', 'img/pause.png');
     } else {
       clearInterval(refreshIntervalId);
-      canPlay = true;
-      watchHover = false;
+      play = true;
+      hover = false;
       $('#playOrStop').attr('action', 'play');
       $('#playOrStop').attr('src', 'img/play.png');
     }
   }
 
-  $('body').keyup(function (e) {
-    if (e.keyCode === 37) {
-      fonctionPrevious();
-    }
-
-    if (e.keyCode === 39) {
-      fonctionNext();
-    }
-
-    if (e.keyCode === 32) {
-      fonctionPlayStop();
-    }
-
-  });
-
+  // Fade in-out function not totally correct 
   /*$('#slide').hover(function () {
       $('#nav').fadeIn('slow');
     }, function () {
@@ -117,51 +135,34 @@ $(document).ready(function () {
       }
   );*/
 
-  $("#slide").hover(function() {  // Mouse enters
-    if (!canPlay && watchHover) {
+  // Fade in-out of button Play/Stop when Mouse enter or leaves
+  $("#slide").hover(function() {
+    if (!play && hover) {
       clearInterval(play);
       console.log("in : " + play);
     }
-  }, function() {           // Mouse leaves
-    if (!canPlay && watchHover) {
-      play = setInterval(fonctionNext, 2000);
+  }, function() {
+    if (!play && hover) {
+      play = setInterval(fonctionNext, speed);
       console.log("out : " + play);
-    } else if (!canPlay && !watchHover) {
-      watchHover = true;
+    } else if (!play && !hover) {
+      hover = true;
     }
   });
 
-  function displayTitle() {
-    $('.title').text($("#slide_next img:first").attr("data-title"));
-    $('.desc').text($("#slide_next img:first").attr("data-desc"));
-    
-    $('.description').animate({
-      marginTop: "-=150"
-    }, "fast", function() {
-      $('.description').css({
-        textShadow: "3px 2px rgba(0,0,0,0.5)"
-      });
-      $('.navigator').css({
-        color: "#eee"
-      });
-    });
-  }
 
-  function removeTitle() {
-    $('.title').text($("#slide_next img:first").attr("data-title"));
-    $('.desc').text($("#slide_next img:first").attr("data-desc"));
-    $('.description').css({
-        textShadow: "0 0 #fff"
-      });
-    $('.description').animate({
-      marginTop: "+=150"
-    }, "fast", function() {
-      $('.description').css({
-        textShadow: "0 0 #fff"
-      });
-      $('.navigator').css({
-        color: "transparent"
-      });
-    });
-  }
+  //function with keyboard next/previous action with directional touch (<>) 
+  //and play/stop action with the space key
+  $('body').keyup(function (e) {
+    if (e.keyCode === 37) {
+      fonctionPrevious();
+    }
+    if (e.keyCode === 39) {
+      fonctionNext();
+    }
+    if (e.keyCode === 32) {
+      fonctionPlayStop();
+    }
+  });
+
 });
