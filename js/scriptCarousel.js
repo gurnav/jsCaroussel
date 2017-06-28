@@ -6,9 +6,11 @@ Fonctionnalités :
   Animation de l'affichage des titres et descriptions diff de l'animation des images
   Rognage des images ou autre solution (done)
   Suivant, précédent, play, pause (done)
+  KeyBoard Suivant, précédent, play, pause (done)
+  Anti spam-click (done)
   Hover Play pause (done)
   Responsive et BEAU (done)
-  Administrable via une liste de variable en haut de script
+  Administrable via une liste de variable en haut de script (done)
   Module de controle : (Puces ou vignettes)
 */
 
