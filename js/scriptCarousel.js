@@ -25,7 +25,7 @@ $(document).ready(function () {
 
   preloadSlide(slides);
 
-  // slideshow functions referred each to an id
+  // slideshow functions referred each to an id that calls each buttons of our slider
   $('#next').click(fonctionNext);
   $('#previous').click(fonctionPrevious);
   $('#playOrStop').click(fonctionPlayStop);
@@ -80,19 +80,6 @@ $(document).ready(function () {
   //function to display the previous picture of it's actual
   function fonctionPrevious () {
     // Stop the function if we're already sliding
-    /*if(sliding){
-        return false;
-    }
-    // And now we're sliding
-    sliding = true;
-    $('#slide .element:first').before($('#slide .element:last'));
-    $('#slide').css('margin-left', '-700px');
-    $('#slide').animate(
-      { marginLeft: '0px' },
-      speed
-    );
-    // Slide over!
-    sliding = false;*/
     if(sliding){
         return false;
     }
@@ -165,6 +152,19 @@ $(document).ready(function () {
     if (e.keyCode === 32) {
       fonctionPlayStop();
     }
+  });
+
+
+  //function dots navigations 
+  $('ol li').bind('click', function(){
+
+        //var index = $(this).index() + 1;
+
+        $(".active").fadeOut(300);
+
+        $("#slide").fadeIn(300);        
+        $("#slide").removeClass("active");
+        $("#slide").addClass("active");
   });
 
 });
