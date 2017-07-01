@@ -12,7 +12,7 @@
     width: 4800px;
     overflow: hidden;
     object-fit: cover;
-    height: 590px;
+    height: 530px;
     margin: 0 auto;
     position: relative;
 }
@@ -34,19 +34,20 @@
 .divDesc {
     top: 500px;
     font-size: 150%;
-    color: #000;
-    opacity: 0.5;
-    text-align: center;
-    font-family: 'Open Sans', sans-serif;
+    color: #fff;
+    opacity: 0.8;
+    text-align: left;
+    margin-left: 2%;
 }
 
 .divTitle {
     top: 500px;
     font-size: 150%;
-    color: #000;
-    opacity: 0.5;
-    text-align: center;
-    font-family: 'Open Sans', sans-serif;
+    margin-top: -75px;
+    color: #fff;
+    opacity: 0.8;
+    text-align: left;
+    margin-left: 2%;
 }
 
 #slideshow {
@@ -65,7 +66,7 @@
 
 #nav {
     position: absolute;
-    margin-top: -390px;
+    margin-top: -300px;
     z-index: 2;
     width: 700px;
 }
@@ -113,12 +114,11 @@
 }
 
 /*css dots navigation*/
-
-ol{
+ul{
     list-style= none;
     width:100%;
 }
-ol li{
+ul li{
     background: #888;
     border-radius: 50%;
     display: inline-block;

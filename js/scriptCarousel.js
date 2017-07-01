@@ -3,15 +3,15 @@ Afficher un message si le JS n'est pas activé (done)
 Appel des données en AJAX (format JSON) https://www.skrzypczyk.fr/slideshow.php (done)
 
 Fonctionnalités :
-  Animation de l'affichage des titres et descriptions diff de l'animation des images
+  Animation de l'affichage des titres et descriptions diff de l'animation des images (not done)
   Rognage des images ou autre solution (done)
   Suivant, précédent, play, pause (done)
   KeyBoard Suivant, précédent, play, pause (done)
   Anti spam-click (done)
   Hover Play pause (done)
-  Responsive et BEAU (done)
+  Responsive et BEAU (halfly-done)
   Administrable via une liste de variable en haut de script (done)
-  Module de controle : (Puces ou vignettes)
+  Module de controle : Puces ou vignettes (not done)
 */
 
 
@@ -156,9 +156,9 @@ $(document).ready(function () {
 
 
   //function dots navigations 
-  $('ol li').bind('click', function(){
+  $('ul li').bind('click', function(){
 
-        //var index = $(this).index() + 1;
+        //var slide = $(this).slide() + 1;
 
         $(".active").fadeOut(300);
 
