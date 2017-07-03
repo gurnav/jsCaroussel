@@ -21,7 +21,8 @@ $(document).ready(function () {
   var refreshIntervalId;
   var play = true;
   var speed = 1000;
-  var sliding = false;
+
+  sliding = false;
 
   preloadSlide(slides);
 
@@ -55,9 +56,11 @@ $(document).ready(function () {
    */
   function preloadSlide (slides) {
     let slideSize = slides.length * $(this).width();
+    let el = 0;
     slides.forEach(function (element) {
-      console.log(element.url);
-      $('#slide').append("<div class='element'><img src='" + element.url + "' class='slideshow'><div class='divTitle'>" + element.title + "</div><div class='divDesc'>" + element.desc + "</div></div");
+      $('#slide').append("<div id='el" + ++el + "' class='element'><img src='" + element.url + "' class='slideshow'><div class='divTitle'>" + element.title + "</div><div class='divDesc'>" + element.desc + "</div></div");
+      $('#bullet').append("<li id='bel" + el + "' class='bullet'></li>");
+      $('#slide .element:first').attr('selected', 'selected');
     });
     $('#slide').css('width', slideSize);
   }
@@ -70,6 +73,8 @@ $(document).ready(function () {
     if (sliding) { return false; }
     // And now we're sliding
     sliding = true;
+    // Remove the selected attributes
+    $('#slide .element:first').removeAttr('selected', 'selected');
     // Hiding the text of the next slide for displaying purposes
     $('#slide .element:nth-child(2) .divTitle').fadeTo(0, 0);
     $('#slide .element:nth-child(2) .divDesc').fadeTo(0, 0);
@@ -85,6 +90,7 @@ $(document).ready(function () {
         // When sliding done display the text smoothly
         $('#slide .element:first .divTitle').fadeTo(1000, 1);
         $('#slide .element:first .divDesc').fadeTo(3000, 1);
+        $('#slide .element:first').attr('selected', 'selected');
       }
     );
   }
@@ -97,6 +103,8 @@ $(document).ready(function () {
     if (sliding) { return false; }
     // And now we're sliding
     sliding = true;
+    // Remove the selected attributes
+    $('#slide .element:first').removeAttr('selected', 'selected');
     // Hiding the text of the last slide for displaying purposes
     $('#slide .element:last .divTitle').fadeTo(0, 0);
     $('#slide .element:last .divDesc').fadeTo(0, 0);
@@ -112,6 +120,7 @@ $(document).ready(function () {
         // When sliding done display the text smoothly
         $('#slide .element:first .divTitle').fadeTo(3000, 1);
         $('#slide .element:first .divDesc').fadeTo(5000, 1);
+        $('#slide .element:first').attr('selected', 'selected');
       }
     );
   }
@@ -162,6 +171,16 @@ $(document).ready(function () {
   });
 
 
+  $(window).resize(function () {
+
+    //Au redimensionnement de la fenetre 
+    img_width = $(window).width();
+    $('#slide').css('margin-left', '0px');
+    console.log("Largeur de la fenetre : " + img_width);
+
+});
+
+
   /**
    * Function with keyboard next/previous action with directional touch (<>) 
    * and play/stop action with the space key
@@ -176,12 +195,29 @@ $(document).ready(function () {
   /**
    * Function dots navigations
    */
-  $('ul li').bind('click', function() {
-        // let slide = $(this).slide() + 1;
-        $(".active").fadeOut(300);
-        $("#slide").fadeIn(300);        
-        $("#slide").removeClass("active");
-        $("#slide").addClass("active");
+  $('#bullet li').bind('click', function() {
+    // let slide = $(this).slide() + 1;
+    let num_el = $('#slide .element:first')
+      .attr('id')
+      .toString()
+      .match(/\d+/)[0];
+    let num_bel = $(this)
+      .attr('id')
+      .toString()
+      .match(/\d+/)[0];
+    let iteration = num_bel - num_el;
+
+    if (iteration < 0) {
+      for (i = 0; i > iteration; i -= 1) {
+        fonctionPrevious();
+      }
+    }
+
+    if (iteration > 0) {
+      for (i = 0; i < iteration; i += 1) { 
+        fonctionNext();
+      }
+    }      
   });
 
 });

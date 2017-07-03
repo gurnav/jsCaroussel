@@ -51,14 +51,14 @@
 }
 
 #slideshow {
-	-moz-box-shadow: 15px 15px 15px 1px #cfcfcf;
-	-webkit-box-shadow: 15px 15px 15px 1px #cfcfcf;
-	-o-box-shadow: 15px 15px 15px 1px #cfcfcf;
-	box-shadow: 15px 15px 15px 1px #cfcfcf;
-	filter:progid:DXImageTransform.Microsoft.Shadow(color=#cfcfcf, Direction=134, Strength=15);
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	border-radius: 10px;
+    -moz-box-shadow: 15px 15px 15px 1px #cfcfcf;
+    -webkit-box-shadow: 15px 15px 15px 1px #cfcfcf;
+    -o-box-shadow: 15px 15px 15px 1px #cfcfcf;
+    box-shadow: 15px 15px 15px 1px #cfcfcf;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#cfcfcf, Direction=134, Strength=15);
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -114,15 +114,17 @@
 }
 
 /*css dots navigation*/
-ul{
-    list-style= none;
+#bullet {
+    list-style: none;
     width:100%;
 }
-ul li{
+
+#bullet li{
     background: #888;
     border-radius: 50%;
     display: inline-block;
     width:20px;
     height:20px;
     cursor: pointer;
+    margin-left: 5px;
 }
