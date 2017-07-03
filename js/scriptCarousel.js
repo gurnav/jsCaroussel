@@ -71,8 +71,8 @@ $(document).ready(function () {
     // And now we're sliding
     sliding = true;
     // Hiding the text of the next slide for displaying purposes
-    $('#slide .element:nth-child(2) .divTitle').hide();
-    $('#slide .element:nth-child(2) .divDesc').hide();
+    $('#slide .element:nth-child(2) .divTitle').fadeTo(0, 0);
+    $('#slide .element:nth-child(2) .divDesc').fadeTo(0, 0);
     // Sliding animation
     $('#slide').animate(
       { marginLeft: '-700px' },
@@ -83,8 +83,8 @@ $(document).ready(function () {
         // Slide over!
         sliding = false;
         // When sliding done display the text smoothly
-        $('#slide .element:first .divTitle').fadeIn('slow');
-        $('#slide .element:first .divDesc').fadeIn(3000);
+        $('#slide .element:first .divTitle').fadeTo(1000, 1);
+        $('#slide .element:first .divDesc').fadeTo(3000, 1);
       }
     );
   }
@@ -98,8 +98,8 @@ $(document).ready(function () {
     // And now we're sliding
     sliding = true;
     // Hiding the text of the last slide for displaying purposes
-    $('#slide .element:last .divTitle').hide();
-    $('#slide .element:last .divDesc').hide();
+    $('#slide .element:last .divTitle').fadeTo(0, 0);
+    $('#slide .element:last .divDesc').fadeTo(0, 0);
     // Sliding animation
     $('#slide').animate(
       { marginLeft: '0px' },
@@ -110,8 +110,8 @@ $(document).ready(function () {
         // Slide over!
         sliding = false;
         // When sliding done display the text smoothly
-        $('#slide .element:first .divTitle').fadeIn('slow');
-        $('#slide .element:first .divDesc').fadeIn(3000);
+        $('#slide .element:first .divTitle').fadeTo(3000, 1);
+        $('#slide .element:first .divDesc').fadeTo(5000, 1);
       }
     );
   }
