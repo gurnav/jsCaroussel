@@ -9,9 +9,9 @@
  * KeyBoard Suivant, précédent, play, pause (done)
  * Anti spam-click (done)
  * Hover Play pause (done)
- * Responsive et BEAU (halfly-done)
+ * Responsive et BEAU (not done)
  * Administrable via une liste de variable en haut de script (done)
- * Module de controle : Puces ou vignettes (not done)
+ * Module de controle : Puces ou vignettes (done)
  */
 
 
@@ -22,15 +22,19 @@ $(document).ready(function () {
   var play = true;
   var speed = 1000;
 
-  sliding = false;
+  var sliding = false;
 
   preloadSlide(slides);
 
   /**
    * Slideshow functions referred each to an id that calls each buttons of our slider
    */
-  $('#next').click(fonctionNext);
-  $('#previous').click(fonctionPrevious);
+  $('#next').click(function () {
+    buttonNext();
+  });
+  $('#previous').click(function () {
+    buttonPrevious();
+  });
   $('#playOrStop').click(fonctionPlayStop);
 
   function slide () {
@@ -56,23 +60,43 @@ $(document).ready(function () {
    */
   function preloadSlide (slides) {
     let slideSize = slides.length * $(this).width();
-    let el = 0;
+    let el = 1;
     slides.forEach(function (element) {
-      $('#slide').append("<div id='el" + ++el + "' class='element'><img src='" + element.url + "' class='slideshow'><div class='divTitle'>" + element.title + "</div><div class='divDesc'>" + element.desc + "</div></div");
+      $('#slide').append("<div id='el" + el + "' class='element'><img src='" + element.url + "' class='slideshow'><div class='divTitle'>" + element.title + "</div><div class='divDesc'>" + element.desc + "</div></div");
       $('#bullet').append("<li id='bel" + el + "' class='bullet'></li>");
       $('#slide .element:first').attr('selected', 'selected');
+      el++;
     });
     $('#slide').css('width', slideSize);
   }
 
   /**
+   * Function to check if we are sliding
+   * Stop the click if we are already sliding
+   */
+  function disableClickSliding(bullet = false) {
+    if (sliding && !bullet) {
+      $('#next').css('pointer-events', 'none');
+      $('#previous').css('pointer-events', 'none');
+    }
+  }
+
+  /**
+   * Reset the actions for a click sliding
+   */
+  function resetClickSliding() {
+    $('#next').css('pointer-events', '');
+    $('#previous').css('pointer-events', '');
+  }
+
+
+  /**
    * Function to display the next picture of it's actual
    */
-  function fonctionNext () {
-    // Stop the function if we're already sliding
-    if (sliding) { return false; }
+  function buttonNext (bullet = false) {
     // And now we're sliding
     sliding = true;
+    disableClickSliding(bullet);
     // Remove the selected attributes
     $('#slide .element:first').removeAttr('selected', 'selected');
     // Hiding the text of the next slide for displaying purposes
@@ -85,12 +109,15 @@ $(document).ready(function () {
       function () {
         $('#slide .element:last').after($('#slide .element:first'));
         $('#slide').css('margin-left', '0px');
-        // Slide over!
-        sliding = false;
+        
         // When sliding done display the text smoothly
         $('#slide .element:first .divTitle').fadeTo(1000, 1);
         $('#slide .element:first .divDesc').fadeTo(3000, 1);
         $('#slide .element:first').attr('selected', 'selected');
+
+        // Slide over!
+        sliding = false;
+        resetClickSliding();
       }
     );
   }
@@ -98,11 +125,10 @@ $(document).ready(function () {
   /**
    * Function to display the previous picture of it's actual
    */
-  function fonctionPrevious () {
-    // Stop the function if we're already sliding
-    if (sliding) { return false; }
+  function buttonPrevious (bullet = false) {
     // And now we're sliding
     sliding = true;
+    disableClickSliding(bullet);
     // Remove the selected attributes
     $('#slide .element:first').removeAttr('selected', 'selected');
     // Hiding the text of the last slide for displaying purposes
@@ -110,17 +136,19 @@ $(document).ready(function () {
     $('#slide .element:last .divDesc').fadeTo(0, 0);
     // Sliding animation
     $('#slide').animate(
-      { marginLeft: '0px' },
+      { marginLeft: '700px' },
       speed,
       function () {
         $('#slide .element:first').before($('#slide .element:last'));
-        $('#slide').css('margin-left', '-700px');
+        $('#slide').css('margin-left', '0px');
+        // When sliding done display the text smoothly
+        $('#slide .element:first .divTitle').fadeTo(1000, 1);
+        $('#slide .element:first .divDesc').fadeTo(3000, 1);
+        $('#slide .element:first').attr('selected', 'selected');
+        
         // Slide over!
         sliding = false;
-        // When sliding done display the text smoothly
-        $('#slide .element:first .divTitle').fadeTo(3000, 1);
-        $('#slide .element:first .divDesc').fadeTo(5000, 1);
-        $('#slide .element:first').attr('selected', 'selected');
+        resetClickSliding();
       }
     );
   }
@@ -133,7 +161,7 @@ $(document).ready(function () {
     let action = $('#playOrStop').attr('action');
 
     if (action === 'play') {
-      refreshIntervalId = setInterval(fonctionNext,speed);
+      refreshIntervalId = setInterval(buttonNext,speed);
       playStop = false;
       $('#playOrStop').attr('action', 'stop');
       $('#playOrStop').attr('src', 'img/pause.png');
@@ -146,15 +174,6 @@ $(document).ready(function () {
     }
   }
 
-  /** Fade in-out function not totally correct 
-   * $('#slide').hover(function () {
-   *     $('#nav').fadeIn('slow');
-   * }, function () {
-   *     $('#nav').fadeOut('slow');
-   *    }
-   * );
-   */
-
   /**
    * Fade in-out of button Play/Stop when Mouse enter or leaves
    */
@@ -165,20 +184,18 @@ $(document).ready(function () {
     }
   }, function () {
     if (!play && hover) {
-      play = setInterval(fonctionNext, speed);
+      play = setInterval(buttonNext, speed);
       console.log("out : " + play);
     } else if (!play && !hover) { hover = true; }
   });
 
-
+  /**
+   * Resize the window properly
+   */
   $(window).resize(function () {
-
-    //Au redimensionnement de la fenetre 
     img_width = $(window).width();
-    $('#slide').css('margin-left', '0px');
-    console.log("Largeur de la fenetre : " + img_width);
-
-});
+    $('body').css('margin-left', '0px');
+  });
 
 
   /**
@@ -186,9 +203,9 @@ $(document).ready(function () {
    * and play/stop action with the space key
    */ 
   $('body').keyup(function (e) {
-    if (e.keyCode === 37) { fonctionPrevious(); }
-    if (e.keyCode === 39) { fonctionNext(); }
-    if (e.keyCode === 32) { fonctionPlayStop(); }
+    if (!sliding && e.keyCode === 37) { buttonPrevious(); }
+    if (!sliding && e.keyCode === 39) { buttonNext(); }
+    if (!sliding && e.keyCode === 32) { fonctionPlayStop(); }
   });
 
 
@@ -196,7 +213,6 @@ $(document).ready(function () {
    * Function dots navigations
    */
   $('#bullet li').bind('click', function() {
-    // let slide = $(this).slide() + 1;
     let num_el = $('#slide .element:first')
       .attr('id')
       .toString()
@@ -209,13 +225,13 @@ $(document).ready(function () {
 
     if (iteration < 0) {
       for (i = 0; i > iteration; i -= 1) {
-        fonctionPrevious();
+        buttonPrevious(bullet=true);
       }
     }
 
     if (iteration > 0) {
       for (i = 0; i < iteration; i += 1) { 
-        fonctionNext();
+        buttonNext(bullet=true);
       }
     }      
   });
